@@ -18,6 +18,8 @@ class ProgramDetailItem(scrapy.Item):
     avg_daily_inpatient_cases = scrapy.Field(output_processor=TakeFirst())
     avg_daily_surgeries = scrapy.Field(output_processor=TakeFirst())
     avg_daily_ER_cases = scrapy.Field(output_processor=TakeFirst())
+    number_of_positions  = scrapy.Field(output_processor=TakeFirst())
+    program_categories = scrapy.Field(output_processor=TakeFirst)
 
 # clean_text = Compose(MapCompose(lambda v: v.strip()), Join())
 # clean_text = TakeFirst()
