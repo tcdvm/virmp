@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+import logging
+import scrapy
+from scrapy.loader import ItemLoader
+from virmp_spider_2017.items import ProgramDetailItem
+
+
+class VirmpSpider(scrapy.Spider):
+    name = 'virmp'
+    allowed_domains = ['www.virmp.org']
+    start_urls = ['https://www.virmp.org/Program/List?categoryIDs=12&institution=&stateID=']
+
+    def parse(self, response):
+        # self.logger.info('hi')
+        self.logger.info(response.xpath('//title').extract())
+        # self.logger.info(response.xpath('//strong').extract_first())
+        for url in response.xpath('//table[@id="searchtable"]/*/td[2]/a/@href').extract():
+            detailpage = response.urljoin(url)
+            yield scrapy.Request(detailpage, callback=self.parseDetails)
+
+        next_page_url = response.xpath("//a[contains(text(), '>')]/@href").extract_first()
+        if next_page_url is not None:
+            yield scrapy.Request(response.urljoin(next_page_url))
+    
+    def parseDetails(self, response):
+        self.logger.info("============" + response.xpath('//strong/text()').extract_first())
+
+        loader = ItemLoader(item=ProgramDetailItem(), response=response)
+        loader.add_xpath('name', '//strong/text()')
+        loader.add_xpath('total_annual_cases', '//table[@id="caseload"]/tr[2]/td[1]/text()')
+        loader.add_xpath('avg_daily_cases', '//table[@id="caseload"]/tr[2]/td[2]/text()')
+        loader.add_xpath('avg_daily_outpatient_cases', '//table[@id="caseload"]/tr[2]/td[3]/text()')
+        loader.add_xpath('avg_daily_inpatient_cases', '//table[@id="caseload"]/tr[2]/td[4]/text()')
+        loader.add_xpath('avg_daily_surgeries', '//table[@id="caseload"]/tr[2]/td[5]/text()')
+        loader.add_xpath('avg_daily_ER_cases', '//table[@id="caseload"]/tr[2]/td[6]/text()')
+
+        yield loader.load_item()
+
+        # yield program_detail
