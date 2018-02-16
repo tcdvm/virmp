@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 import logging
 import scrapy
 from scrapy.loader import ItemLoader
@@ -38,7 +38,7 @@ class VirmpSpider(scrapy.Spider):
         # Get number of positions
         loader.add_xpath('number_of_positions', '//*[contains(text(),"Position")]/text()')
         # Get program categories (to exclude any internship that is multi-category)
-        loader.add_xpath('program_categories', '//p[contains(.,"Program Categories")]')
+        loader.add_xpath('program_categories', '//p[contains(.,"Program Categories")]/text()')
 
         yield loader.load_item()
 
