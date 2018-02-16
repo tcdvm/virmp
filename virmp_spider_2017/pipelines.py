@@ -22,7 +22,8 @@ class VirmpSpider2017Pipeline(object):
             print('Number of positions: ' + item['number_of_positions'])
         
         if item['program_categories']:
-            categories = re.search('', item['program_categories'])
+            for cat in item['program_categories']:
+                print(cat)
 
         line = json.dumps(dict(item)) + "\n"
         self.file.write(line)

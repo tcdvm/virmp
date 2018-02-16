@@ -19,7 +19,7 @@ class ProgramDetailItem(scrapy.Item):
     avg_daily_surgeries = scrapy.Field(output_processor=TakeFirst())
     avg_daily_ER_cases = scrapy.Field(output_processor=TakeFirst())
     number_of_positions  = scrapy.Field(output_processor=TakeFirst())
-    program_categories = scrapy.Field(output_processor=TakeFirst)
+    program_categories = scrapy.Field(input_processor = MapCompose(lambda v: v.strip()))
 
 # clean_text = Compose(MapCompose(lambda v: v.strip()), Join())
 # clean_text = TakeFirst()
@@ -27,10 +27,4 @@ class ProgramDetailItem(scrapy.Item):
 
 # class ProgramDetailLoader(ItemLoader):
 #     default_item_class = ProgramDetailItem
-#     name = clean_text
-#     total_annual_cases = to_int
-#     avg_daily_cases = to_int
-#     avg_daily_outpatient_cases = to_int
-#     avg_daily_inpatient_cases = to_int
-#     avg_daily_surgeries = to_int
-#     avg_daily_ER_cases = to_int
+#     program_categories_in = 
