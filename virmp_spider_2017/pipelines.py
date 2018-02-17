@@ -17,13 +17,13 @@ class VirmpSpider2017Pipeline(object):
     def process_item(self, item, spider):
         # Process number of positions
         if item['number_of_positions']:
-            positions = re.search('(\d+)\s+Position', item['number_of_positions'])
+            positions = re.search(r'(\d+)\s+Position', item['number_of_positions'])
             item['number_of_positions'] = positions.group(1)
             print('Number of positions: ' + item['number_of_positions'])
         
-        if item['program_categories']:
-            for cat in item['program_categories']:
-                print(cat)
+        # if item['program_categories']:
+        #     for cat in item['program_categories']:
+        #         print(cat)
 
         line = json.dumps(dict(item)) + "\n"
         self.file.write(line)

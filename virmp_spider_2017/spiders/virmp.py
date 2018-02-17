@@ -2,6 +2,7 @@
 import logging
 import scrapy
 from scrapy.loader import ItemLoader
+from scrapy.loader.processors import Join, MapCompose, TakeFirst
 from virmp_spider_2017.items import ProgramDetailItem
 
 
@@ -39,6 +40,11 @@ class VirmpSpider(scrapy.Spider):
         loader.add_xpath('number_of_positions', '//*[contains(text(),"Position")]/text()')
         # Get program categories (to exclude any internship that is multi-category)
         loader.add_xpath('program_categories', '//p[contains(.,"Program Categories")]/text()')
+        # Get Salary
+        loader.add_xpath('salary', '//p[contains(.,"Salary")]/text()', re=r"(\d+,?\d+)")
+        # Get faculty and residents in direct support of program
+        loader.add_xpath('faculty_support', '//p[contains(.,"Number of Faculty/Clinicians in Direct Support of Program")]/text()[1]', re=r'(\d+)') 
+        loader.add_xpath('resident_support', '//p[contains(.,"Number of Faculty/Clinicians in Direct Support of Program")]/text()[3]', re=r'(\d+)') 
 
         yield loader.load_item()
 
