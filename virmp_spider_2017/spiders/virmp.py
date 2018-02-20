@@ -65,6 +65,12 @@ class VirmpSpider(scrapy.Spider):
         loader.add_xpath('tech_assigned_to_ER', '//table[@id="vettech"]/tr[2]/td[2]/text()')
         loader.add_xpath('tech_assigned_to_ICU', '//table[@id="vettech"]/tr[2]/td[3]/text()')
 
+        # Get Outcomes Assessment
+        loader.add_xpath('avg_num_interns_started_past_5_years', '//p[contains(., "Average number of interns who started this program per year for the past 5 years:")]/text()', re=r'(\d+)$')
+        loader.add_xpath('avg_num_interns_completed_past_5_years', '//p[contains(., "Average number of interns who completed this program per year for the past 5 years:")]/text()', re=r'(\d+)$')
+        loader.add_xpath('num_interns_applied_residency_past_5_years', '//p[contains(.,"Number of interns from this program who applied for a residency in the past 5 years")]/text()', re=r'(\d+)$')
+        loader.add_xpath('num_interns_accepted_residency_past_5_years', '//p[contains(.,"Number of interns from this program who accepted a residency in the past 5 years")]/text()', re=r'(\d+)$')
+
         yield loader.load_item()
 
         # yield program_detail

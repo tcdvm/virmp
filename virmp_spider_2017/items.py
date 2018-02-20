@@ -62,6 +62,11 @@ class ProgramDetailItem(scrapy.Item):
     tech_direct_support = scrapy.Field(output_processor=TakeFirst())
     tech_assigned_to_ER = scrapy.Field(output_processor=TakeFirst())
     tech_assigned_to_ICU = scrapy.Field(output_processor=TakeFirst())
+    # Outcomes assessment
+    avg_num_interns_started_past_5_years = scrapy.Field(output_processor=TakeFirst())
+    avg_num_interns_completed_past_5_years = scrapy.Field(output_processor=TakeFirst())
+    num_interns_applied_residency_past_5_years = scrapy.Field(output_processor=TakeFirst())
+    num_interns_accepted_residency_past_5_years = scrapy.Field(output_processor=TakeFirst())
 
 # clean_text = Compose(MapCompose(lambda v: v.strip()), Join())
 # clean_text = TakeFirst()
