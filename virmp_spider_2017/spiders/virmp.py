@@ -24,11 +24,24 @@ class VirmpSpider(scrapy.Spider):
         #     yield scrapy.Request(response.urljoin(next_page_url))
     
     def parseDetails(self, response):
-        self.logger.info("============" + response.xpath('//strong/text()').extract_first())
+        self.logger.info("\n============" + response.xpath('//strong/text()').extract_first() + "===============")
 
+        # Initialize loader
         loader = ItemLoader(item=ProgramDetailItem(), response=response)
+
+        # Program Details URL
+        loader.add_value('program_details_url', response.url)
+
         # Get name of place
         loader.add_xpath('name', '//strong/text()')
+
+        # Get addresses, phone numbers, contact info
+        loader.add_css('address', 'p.addressblock', re=r'</strong><br>(.*)<br>(United States|Canada)')
+        loader.add_css('phone', 'p.addressblock', re=r'(\d+-\d+-\d+)\s+\(V\)')
+        loader.add_css('fax', 'p.addressblock', re=r'(\d+-\d+-\d+)\s+\(F\)')
+        loader.add_xpath('contact', '//p[contains(.,"Authorized Administrative Official")]/text()[1]')
+        loader.add_xpath('contact_email', '//a[contains(.,"(email)")]/@href', re=r'mailto:(.*)')
+
         # Get caseload info
         loader.add_xpath('total_annual_cases', '//table[@id="caseload"]/tr[2]/td[1]/text()')
         loader.add_xpath('avg_daily_cases', '//table[@id="caseload"]/tr[2]/td[2]/text()')
@@ -36,6 +49,7 @@ class VirmpSpider(scrapy.Spider):
         loader.add_xpath('avg_daily_inpatient_cases', '//table[@id="caseload"]/tr[2]/td[4]/text()')
         loader.add_xpath('avg_daily_surgeries', '//table[@id="caseload"]/tr[2]/td[5]/text()')
         loader.add_xpath('avg_daily_ER_cases', '//table[@id="caseload"]/tr[2]/td[6]/text()')
+
         # Get number of positions
         loader.add_xpath('number_of_positions', '//*[contains(text(),"Position")]/text()')
         # Get program categories (to exclude any internship that is multi-category)
@@ -45,6 +59,11 @@ class VirmpSpider(scrapy.Spider):
         # Get faculty and residents in direct support of program
         loader.add_xpath('faculty_support', '//p[contains(.,"Number of Faculty/Clinicians in Direct Support of Program")]/text()[1]', re=r'(\d+)') 
         loader.add_xpath('resident_support', '//p[contains(.,"Number of Faculty/Clinicians in Direct Support of Program")]/text()[3]', re=r'(\d+)') 
+
+        # Get Registered/Licensed/Certified Veterinary Technicians
+        loader.add_xpath('tech_direct_support', '//table[@id="vettech"]/tr[2]/td[1]/text()')
+        loader.add_xpath('tech_assigned_to_ER', '//table[@id="vettech"]/tr[2]/td[2]/text()')
+        loader.add_xpath('tech_assigned_to_ICU', '//table[@id="vettech"]/tr[2]/td[3]/text()')
 
         yield loader.load_item()
 
