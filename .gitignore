@@ -1,4 +1,6 @@
 items.jl
 virmp_spider_2017/items.jl
 virmp_scrapy.code-workspace
-*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
