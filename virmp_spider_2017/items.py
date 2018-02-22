@@ -31,6 +31,27 @@ def strip_comma_tofloat(salary):
     stripped = stripped.replace(',', '')
     return float(stripped)
 
+def yes_or_no(answer_array):
+    # print(answer_array)
+    if len(answer_array) != 2:
+        return "Error"
+    
+    # If first item (yes) is "-blank", then return "No primary case responsibility"
+    if answer_array[0]:
+        return "No"
+    else:
+        return "Yes"
+
+def checked(checkmark):
+    # print(checkmark)
+    # If '' then it matched with "checkmark.gif" which is yes
+    if (checkmark == 'checkmark'):
+        return "Yes"
+    elif (checkmark == 'checkmark-blank'):
+        return "No"
+    else:
+        return "Error"
+
 class ProgramDetailItem(scrapy.Item):
     # Define the fields for your item here like:
     name = scrapy.Field(output_processor=TakeFirst())
@@ -120,6 +141,59 @@ class ProgramDetailItem(scrapy.Item):
     ACZM_PT = scrapy.Field(output_processor=TakeFirst())
     AVDC_FT = scrapy.Field(output_processor=TakeFirst())
     AVDC_PT = scrapy.Field(output_processor=TakeFirst())
+
+    # Clinical Experience and Responsibilities
+    first_opinion = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    primary_surgeon = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    complex_cases = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    daily_patient_rounds = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    direct_supervision_percentage = scrapy.Field(output_processor=TakeFirst())
+
+    # Didactic training
+    weekly_teaching_rounds = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    presentation = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    professional_meeting_opportunity = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    financial_support_for_meeting = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    publication_requirement = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    
+    # Facilities
+    current_medical_textbooks = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    computer_with_internet = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    search_engines = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    icu = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+
+    # Equipment
+    arthroscopy = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    basic_clinical_laboratory_equipment= scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    blood_gas_analysis = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    blood_pressure_monitoring = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    bone_plating_equipment = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    ct_scan = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    diagnostic_laboratory = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    digital_radiography = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    echocardiography = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    electrocardiography = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    endoscopy = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    laparoscopy = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    mri = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    nuclear_medicine = scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    physical_therapy_equipment= scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+    ultrasound= scrapy.Field(input_processor=Compose(TakeFirst(), checked), output_processor=TakeFirst())
+
+    # Scheduling
+    daytime_primary_emergency = scrapy.Field(output_processor=TakeFirst())
+    overnight_primary_emergency = scrapy.Field(output_processor=TakeFirst())
+    first_opinion_clinics = scrapy.Field(output_processor=TakeFirst())
+    elective_time = scrapy.Field(output_processor=TakeFirst())
+    satellite_clinic = scrapy.Field(output_processor=TakeFirst())
+
+    # Orientation/Supervision/Mentoring
+    formal_orientation_required = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    vet_mentor = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    written_evals = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+    orientation_manual = scrapy.Field(input_processor=Compose(yes_or_no), output_processor=TakeFirst())
+
+
 
 # clean_text = Compose(MapCompose(lambda v: v.strip()), Join())
 # clean_text = TakeFirst()
