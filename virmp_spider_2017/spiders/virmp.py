@@ -19,9 +19,9 @@ class VirmpSpider(scrapy.Spider):
             detailpage = response.urljoin(url)
             yield scrapy.Request(detailpage, callback=self.parseDetails)
 
-        # next_page_url = response.xpath("//a[contains(text(), '>')]/@href").extract_first()
-        # if next_page_url is not None:
-        #     yield scrapy.Request(response.urljoin(next_page_url))
+        next_page_url = response.xpath("//a[contains(text(), '>')]/@href").extract_first()
+        if next_page_url is not None:
+            yield scrapy.Request(response.urljoin(next_page_url))
     
     def parseDetails(self, response):
         self.logger.info("\n============" + response.xpath('//strong/text()').extract_first() + "===============")
@@ -135,7 +135,7 @@ class VirmpSpider(scrapy.Spider):
         loader.add_xpath('primary_surgeon', '//li[contains(., "Is the intern the primary surgeon on a broad range of elective and entry-level procedures?")]/div/img', re=r'checkmark(.*).gif')
         loader.add_xpath('complex_cases', '//li[contains(., "Does the intern have primary case care responsibility for complex cases with supervision by a boarded specialist?")]/div/img', re=r'checkmark(.*).gif')
         loader.add_xpath('daily_patient_rounds', '//li[contains(., "Are patient rounds held daily with a boarded specialist in attendance?")]/div/img', re=r'checkmark(.*).gif')
-        loader.add_xpath('direct_supervision_percentage', '//li[contains(., "What is the percentage of time the intern will be directly supervised?")]', re='(\d+)%')
+        loader.add_xpath('direct_supervision_percentage', '//li[contains(., "What is the percentage of time the intern will be directly supervised?")]', re=r'(\d+)%')
 
         # Didactic training
         loader.add_xpath('weekly_teaching_rounds', '//li[contains(.,"Are teaching rounds held weekly?")]/div/img', re=r'checkmark(.*).gif')
@@ -169,11 +169,11 @@ class VirmpSpider(scrapy.Spider):
         loader.add_xpath('ultrasound', '//ul/li[contains(., "Ultrasound")]/img', re=r'(checkmark.*)\.gif')
 
         # Scheduling
-        loader.add_xpath('daytime_primary_emergency', '//li[contains(., "Percentage of program intern is assigned to daytime primary emergency")]', re='(\d+)%')
-        loader.add_xpath('overnight_primary_emergency', '//li[contains(., "Percentage of program intern is assigned to overnight primary emergency")]', re='(\d+)%')
-        loader.add_xpath('first_opinion_clinics', '//li[contains(., "Percentage of program intern is assigned to first opinion (primary care) clinics")]', re='(\d+)%')
-        loader.add_xpath('elective_time', '//li[contains(., "Percentage of program intern is provided elective time")]', re='(\d+)%')
-        loader.add_xpath('satellite_clinic', '//li[contains(., "Percentage of program intern is required to work at a secondary (satellite) clinic")]', re='(\d+)%')
+        loader.add_xpath('daytime_primary_emergency', '//li[contains(., "Percentage of program intern is assigned to daytime primary emergency")]', re=r'(\d+)%')
+        loader.add_xpath('overnight_primary_emergency', '//li[contains(., "Percentage of program intern is assigned to overnight primary emergency")]', re=r'(\d+)%')
+        loader.add_xpath('first_opinion_clinics', '//li[contains(., "Percentage of program intern is assigned to first opinion (primary care) clinics")]', re=r'(\d+)%')
+        loader.add_xpath('elective_time', '//li[contains(., "Percentage of program intern is provided elective time")]', re=r'(\d+)%')
+        loader.add_xpath('satellite_clinic', '//li[contains(., "Percentage of program intern is required to work at a secondary (satellite) clinic")]', re=r'(\d+)%')
 
         # Orientation/Supervision/Mentoring
         loader.add_xpath('formal_orientation_required', '//li[contains(.,"Is a formal orientation program required?")]/div/img', re=r'checkmark(.*).gif')
